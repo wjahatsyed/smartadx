@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ad-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ad-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/analyticsservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/analyticsservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/smartadx.iml" filepath="$PROJECT_DIR$/.idea/smartadx.iml" />
     </modules>
   </component>

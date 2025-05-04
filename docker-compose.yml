@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"       # RabbitMQ messaging port
+      - "15672:15672"     # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - smartadx-network
+
+  ad-service:
+    build:
+      context: ./backend/ad-service
+    container_name: ad-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - rabbitmq
+    networks:
+      - smartadx-network
+
+  analytics-service:
+    build:
+      context: ./backend/analytics-service
+    container_name: analytics-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rabbitmq
+    networks:
+      - smartadx-network
+
+networks:
+  smartadx-network:
+    driver: bridge
