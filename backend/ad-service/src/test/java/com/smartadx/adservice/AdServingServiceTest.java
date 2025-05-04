@@ -31,7 +31,7 @@ class AdServingServiceTest {
                 .id(1L)
                 .advertiser("Adidas")
                 .content("https://ads.com/banner-adidas.jpg")
-                .targetingKeywords("sports,shoes,fitness")
+                .interestTags(List.of("sports", "shoes", "fitness"))
                 .startDate(LocalDateTime.now().minusDays(1))
                 .endDate(LocalDateTime.now().plusDays(5))
                 .budget(5000.0)

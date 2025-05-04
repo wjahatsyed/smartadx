@@ -33,7 +33,7 @@ class AdCampaignServiceTest {
                 .id(1L)
                 .advertiser("Nike")
                 .content("https://ads.com/banner1.jpg")
-                .targetingKeywords("sports,shoes")
+                .interestTags(List.of("sports", "shoes"))
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now().plusDays(10))
                 .budget(5000.0)

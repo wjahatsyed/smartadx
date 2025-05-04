@@ -47,7 +47,7 @@ class AdCampaignControllerTest {
                 .id(1L)
                 .advertiser("Nike")
                 .content("https://ads.com/banner.jpg")
-                .targetingKeywords("sports,shoes")
+                .interestTags(List.of("sports, shoes"))
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now().plusDays(7))
                 .budget(2000.0)
