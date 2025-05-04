@@ -20,3 +20,10 @@ spring:
       username: guest
       password: guest
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mappings
+
+
