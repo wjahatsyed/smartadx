@@ -49,7 +49,7 @@ class AdCampaignServiceTest {
         List<AdCampaign> result = service.getAllCampaigns();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getAdvertiser()).isEqualTo("Nike");
+        assertThat(result.getFirst().getAdvertiser()).isEqualTo("Nike");
     }
 
     @Test
