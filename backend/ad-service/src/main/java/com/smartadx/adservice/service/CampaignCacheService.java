@@ -28,10 +28,16 @@ public class CampaignCacheService {
 
     public List<AdCampaign> getActiveCampaigns() {
         Object cached = redisTemplate.opsForValue().get(CACHE_KEY);
+
         if (cached != null) {
             return objectMapper.convertValue(cached, new TypeReference<>() {});
         }
-        return List.of(); // Empty fallback
+
+        // 🟡 Cache miss — fallback to DB and re-cache
+        List<AdCampaign> allCampaigns = adCampaignRepository.findAll();
+        refreshCache(allCampaigns); // Refill Redis with filtered active campaigns
+
+        return getActiveCampaigns(); // Try again now that it's cached
     }
 
     public void refreshCache(List<AdCampaign> allCampaigns) {
