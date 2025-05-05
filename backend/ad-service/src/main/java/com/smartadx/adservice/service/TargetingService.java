@@ -3,6 +3,7 @@ package com.smartadx.adservice.service;
 import com.smartadx.adservice.dto.TargetedAdResponse;
 import com.smartadx.adservice.dto.UserProfileDto;
 import com.smartadx.adservice.model.AdCampaign;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,15 @@ import java.util.Set;
 public class TargetingService {
 
     private final CampaignCacheService cacheService;
+
+    @PostConstruct
+    public void init() {
+        cacheActiveCampaigns(); // Populate Redis cache at startup
+    }
+
+    public void cacheActiveCampaigns() {
+        cacheService.populateActiveCampaignCache(); // Delegated to cache layer
+    }
 
     public TargetedAdResponse getBestMatchingAd(UserProfileDto user) {
         List<AdCampaign> campaigns = cacheService.getActiveCampaigns();

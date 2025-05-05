@@ -3,6 +3,7 @@ package com.smartadx.adservice.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartadx.adservice.model.AdCampaign;
+import com.smartadx.adservice.repository.AdCampaignRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class CampaignCacheService {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
+    private final AdCampaignRepository adCampaignRepository;
 
     private static final String CACHE_KEY = "active_campaigns";
 
@@ -40,5 +42,11 @@ public class CampaignCacheService {
                 .collect(Collectors.toList());
 
         cacheActiveCampaigns(active);
+    }
+
+    // ✅ New method for app startup or API refresh
+    public void populateActiveCampaignCache() {
+        List<AdCampaign> allCampaigns = adCampaignRepository.findAll();
+        refreshCache(allCampaigns);
     }
 }
