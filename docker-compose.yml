@@ -23,17 +23,6 @@ services:
     networks:
       - smartadx-network
 
-  postgres:
-    image: postgres:16
-    container_name: postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    networks:
-      - smartadx-network
-
   ad-service:
     build:
       context: ./backend/ad-service
@@ -42,10 +31,9 @@ services:
       - "8081:8081"
     depends_on:
       - rabbitmq
-      - postgres
       - redis
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/adservice
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/adservice
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_REDIS_HOST: redis
@@ -61,10 +49,9 @@ services:
       - "8082:8082"
     depends_on:
       - rabbitmq
-      - postgres
       - redis
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/analyticsservice
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/analyticsservice
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_REDIS_HOST: redis

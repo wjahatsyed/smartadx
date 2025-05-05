@@ -6,6 +6,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/adservice
     username: postgres
     password: postgres
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,16 +15,14 @@ spring:
       hibernate:
         format_sql: true
 
-    rabbitmq:
-      host: localhost
-      port: 5672
-      username: guest
-      password: guest
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 management:
   endpoints:
     web:
       exposure:
         include: mappings
-
-
