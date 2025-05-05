@@ -3,23 +3,19 @@ package com.smartadx.adservice.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartadx.adservice.model.AdCampaign;
 import com.smartadx.adservice.repository.AdCampaignRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AdCampaignService {
 
     private final AdCampaignRepository adCampaignRepository;
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper;
-
-    public AdCampaignService(AdCampaignRepository adCampaignRepository, RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
-        this.adCampaignRepository = adCampaignRepository;
-        this.rabbitTemplate = rabbitTemplate;
-        this.objectMapper = objectMapper;
-    }
 
     public List<AdCampaign> getAllCampaigns() {
         return adCampaignRepository.findAll();
