@@ -42,7 +42,14 @@ public class AdCampaign {
 
     private LocalDateTime createdAt;
 
+    public String getTargetingKeywords() {
+        return location + " " + ageGroup;
+    }
+
     public enum AdType {
         TEXT, BANNER, VIDEO_URL
     }
+
+    @Version
+    private Long version;
 }

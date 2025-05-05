@@ -21,16 +21,26 @@ public class AdServingServiceImpl implements AdServingService {
     public Optional<AdCampaign> serveAd(List<String> userKeywords) {
         LocalDateTime now = LocalDateTime.now();
 
-        return repository.findAll().stream()
-                .filter(c -> !c.getStartDate().isAfter(now) && !c.getEndDate().isBefore(now)) // active date
-                .filter(c -> c.getImpressions() > 0 && c.getBudget() > 0) // has budget & impressions
-                .filter(c -> {
-                    Set<String> campaignKeywords = Arrays.stream(c.getTargetingKeywords().split(","))
+        // active date
+        // has budget & impressions
+        // prioritize by budget
+        List<AdCampaign> toSort = new ArrayList<>();
+        for (AdCampaign adCampaign : repository.findAll()) {
+            if (!adCampaign.getStartDate().isAfter(now) && !adCampaign.getEndDate().isBefore(now)) {
+                if (adCampaign.getImpressions() > 0 && adCampaign.getBudget() > 0) {
+                    Set<String> campaignKeywords = adCampaign.getInterestTags().stream()
                             .map(String::trim)
                             .collect(Collectors.toSet());
-                    return campaignKeywords.stream().anyMatch(userKeywords::contains);
-                })
-                .sorted(Comparator.comparingDouble(AdCampaign::getBudget).reversed()) // prioritize by budget
-                .findFirst();
+                    if (campaignKeywords.stream().anyMatch(userKeywords::contains)) {
+                        toSort.add(adCampaign);
+                    }
+                }
+            }
+        }
+        toSort.sort(Comparator.comparingDouble(AdCampaign::getBudget).reversed());
+        for (AdCampaign adCampaign : toSort) {
+            return Optional.of(adCampaign);
+        }
+        return Optional.empty();
     }
 }
