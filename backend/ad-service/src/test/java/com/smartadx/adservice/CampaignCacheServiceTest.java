@@ -1,12 +1,14 @@
 package com.smartadx.adservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smartadx.adservice.dto.AdCampaignDTO;
 import com.smartadx.adservice.model.AdCampaign;
 import com.smartadx.adservice.repository.AdCampaignRepository;
 import com.smartadx.adservice.service.CampaignCacheService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
@@ -61,11 +63,11 @@ class CampaignCacheServiceTest {
         // Act
         campaignCacheService.populateActiveCampaignCache();
 
-        // Assert
+        // Assert: Verify only the active campaign is cached as AdCampaignDTO
         verify(valueOps, times(1)).set(eq("active_campaigns"), argThat(campaigns -> {
             @SuppressWarnings("unchecked")
-            List<AdCampaign> list = (List<AdCampaign>) campaigns;
-            return list.size() == 1 && list.get(0).getId().equals(1L);
+            List<AdCampaignDTO> list = (List<AdCampaignDTO>) campaigns;
+            return list.size() == 1 && list.getFirst().getId().equals(1L);
         }));
     }
 }

@@ -1,9 +1,9 @@
 package com.smartadx.adservice.service;
 
+import com.smartadx.adservice.dto.AdCampaignDTO;
 import com.smartadx.adservice.dto.AdEventDto;
 import com.smartadx.adservice.dto.TargetedAdResponse;
 import com.smartadx.adservice.dto.UserProfileDto;
-import com.smartadx.adservice.model.AdCampaign;
 import com.smartadx.adservice.producer.AdEventProducer;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,6 @@ public class TargetingService {
 
     private final CampaignCacheService cacheService;
     private final AdEventProducer adEventProducer;
-    private final AdEventDto adEventDto;
 
     @PostConstruct
     public void init() {
@@ -28,13 +27,13 @@ public class TargetingService {
     }
 
     public void cacheActiveCampaigns() {
-        cacheService.populateActiveCampaignCache(); // Delegated to cache layer
+        cacheService.populateActiveCampaignCache(); // Pull from DB, convert to DTOs, and cache
     }
 
     public TargetedAdResponse getBestMatchingAd(UserProfileDto user) {
-        List<AdCampaign> campaigns = cacheService.getActiveCampaigns();
-        TargetedAdResponse targetedAdResponse =
-        campaigns.stream()
+        List<AdCampaignDTO> campaigns = cacheService.getActiveCampaigns();
+
+        TargetedAdResponse bestMatch = campaigns.stream()
                 .map(campaign -> {
                     double score = calculateScore(campaign, user);
                     return TargetedAdResponse.builder()
@@ -46,12 +45,13 @@ public class TargetingService {
                 .filter(ad -> ad.getScore() > 0)
                 .max(Comparator.comparing(TargetedAdResponse::getScore))
                 .orElse(null);
-        if(targetedAdResponse != null){
+
+        if (bestMatch != null) {
             adEventProducer.sendAdEvent(
                     AdEventDto.builder()
-                            .campaignId(targetedAdResponse.getCampaignId())
+                            .campaignId(bestMatch.getCampaignId())
                             .type("IMPRESSION")
-                            .userId("user123") // or from request
+                            .userId("user123") // dynamic if available
                             .location(user.getLocation())
                             .ip(user.getIp())
                             .timestamp(LocalDateTime.now())
@@ -59,15 +59,19 @@ public class TargetingService {
             );
         }
 
-        return targetedAdResponse;
+        return bestMatch;
     }
 
-    private double calculateScore(AdCampaign campaign, UserProfileDto user) {
+    private double calculateScore(AdCampaignDTO campaign, UserProfileDto user) {
         double score = 0.0;
 
-        if (campaign.getTargetingKeywords() == null) return 0.0;
+        if (campaign.getInterestTags() == null) return 0.0;
 
-        Set<String> keywords = Set.of(campaign.getTargetingKeywords().toLowerCase().split(","));
+        Set<String> keywords = Set.of(
+                (campaign.getLocation() + "," +
+                        campaign.getAgeGroup() + "," +
+                        String.join(",", campaign.getInterestTags())).toLowerCase().split(",")
+        );
 
         if (keywords.contains(user.getLocation().toLowerCase())) score += 0.4;
         if (keywords.contains(String.valueOf(user.getAge()))) score += 0.2;
