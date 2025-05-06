@@ -1,6 +1,7 @@
 package com.smartadx.adservice.controller;
 
 import com.smartadx.adservice.dto.ClickRequest;
+import com.smartadx.adservice.dto.ConversionRequest;
 import com.smartadx.adservice.dto.TargetedAdResponse;
 import com.smartadx.adservice.dto.UserProfileDto;
 import com.smartadx.adservice.service.TargetingService;
@@ -32,4 +33,11 @@ public class TargetingController {
         targetingService.trackClick(request);
         return ResponseEntity.ok("Click tracked");
     }
+
+    @PostMapping("/conversion")
+    public ResponseEntity<String> trackConversion(@RequestBody ConversionRequest request) {
+        targetingService.trackConversion(request);
+        return ResponseEntity.ok("Conversion tracked");
+    }
+
 }

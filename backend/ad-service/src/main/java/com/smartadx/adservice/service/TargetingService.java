@@ -94,4 +94,18 @@ public class TargetingService {
                         .build()
         );
     }
+
+    public void trackConversion(ConversionRequest request) {
+        adEventProducer.sendAdEvent(
+                AdEventDto.builder()
+                        .campaignId(request.getCampaignId())
+                        .type("CONVERSION")
+                        .userId(request.getUserId())
+                        .location(request.getLocation())
+                        .ip(request.getIp())
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
+
 }
