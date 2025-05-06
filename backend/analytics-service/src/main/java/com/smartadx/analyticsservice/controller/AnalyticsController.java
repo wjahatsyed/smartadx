@@ -1,5 +1,6 @@
 package com.smartadx.analyticsservice.controller;
 
+import com.smartadx.analyticsservice.dto.StatsResponse;
 import com.smartadx.analyticsservice.model.AdEvent;
 import com.smartadx.analyticsservice.service.AnalyticsService;
 import org.springframework.http.ResponseEntity;
@@ -34,4 +35,15 @@ public class AnalyticsController {
     ) {
         return ResponseEntity.ok(analyticsService.getEventCountByCampaignAndType(campaignId, type));
     }
+
+    @GetMapping("/campaign/{campaignId}/ctr")
+    public ResponseEntity<Double> getCTR(@PathVariable Long campaignId) {
+        return ResponseEntity.ok(analyticsService.getCTR(campaignId));
+    }
+
+    @GetMapping("/campaign/{campaignId}/summary")
+    public ResponseEntity<StatsResponse> getSummary(@PathVariable Long campaignId) {
+        return ResponseEntity.ok(analyticsService.getCampaignStats(campaignId));
+    }
+
 }
