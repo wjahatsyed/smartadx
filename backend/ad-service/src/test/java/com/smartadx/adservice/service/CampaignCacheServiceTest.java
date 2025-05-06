@@ -1,10 +1,9 @@
-package com.smartadx.adservice;
+package com.smartadx.adservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartadx.adservice.dto.AdCampaignDTO;
 import com.smartadx.adservice.model.AdCampaign;
 import com.smartadx.adservice.repository.AdCampaignRepository;
-import com.smartadx.adservice.service.CampaignCacheService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;

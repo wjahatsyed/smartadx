@@ -1,7 +1,6 @@
-package com.smartadx.adservice;
+package com.smartadx.adservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smartadx.adservice.controller.AdCampaignController;
 import com.smartadx.adservice.model.AdCampaign;
 import com.smartadx.adservice.service.AdCampaignService;
 import org.junit.jupiter.api.BeforeEach;

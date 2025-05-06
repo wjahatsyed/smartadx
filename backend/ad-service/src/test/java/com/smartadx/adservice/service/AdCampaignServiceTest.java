@@ -1,8 +1,7 @@
-package com.smartadx.adservice;
+package com.smartadx.adservice.service;
 
 import com.smartadx.adservice.model.AdCampaign;
 import com.smartadx.adservice.repository.AdCampaignRepository;
-import com.smartadx.adservice.service.AdCampaignService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

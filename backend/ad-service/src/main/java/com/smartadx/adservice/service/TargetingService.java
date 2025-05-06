@@ -1,9 +1,6 @@
 package com.smartadx.adservice.service;
 
-import com.smartadx.adservice.dto.AdCampaignDTO;
-import com.smartadx.adservice.dto.AdEventDto;
-import com.smartadx.adservice.dto.TargetedAdResponse;
-import com.smartadx.adservice.dto.UserProfileDto;
+import com.smartadx.adservice.dto.*;
 import com.smartadx.adservice.producer.AdEventProducer;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +33,7 @@ public class TargetingService {
         TargetedAdResponse bestMatch = campaigns.stream()
                 .map(campaign -> {
                     double score = calculateScore(campaign, user);
+
                     return TargetedAdResponse.builder()
                             .campaignId(campaign.getId())
                             .content(campaign.getContent())
@@ -58,7 +56,6 @@ public class TargetingService {
                             .build()
             );
         }
-
         return bestMatch;
     }
 
@@ -83,5 +80,18 @@ public class TargetingService {
         score += matchedInterests * 0.1;
 
         return score;
+    }
+
+    public void trackClick(ClickRequest request) {
+        adEventProducer.sendAdEvent(
+                AdEventDto.builder()
+                        .campaignId(request.getCampaignId())
+                        .type("CLICK")
+                        .userId(request.getUserId())
+                        .location(request.getLocation())
+                        .ip(request.getIp())
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
     }
 }
